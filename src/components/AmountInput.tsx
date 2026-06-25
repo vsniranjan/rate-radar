@@ -14,7 +14,7 @@ export function AmountInput({ amtParam }: { amtParam: string }) {
   const [isPending, startTransition] = useTransition();
 
   const handleCompare = () => {
-    if (amount && Number(amount) > 0) {
+    if (amount && Number(amount) > 100) {
       startTransition(() => {
         router.push(`/?amt=${amount}`);
       });
@@ -36,7 +36,7 @@ export function AmountInput({ amtParam }: { amtParam: string }) {
           <InputGroupInput
             id='amount-usd'
             type='number'
-            min={0}
+            min={100}
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             className='text-primary font-medium text-2xl!'
@@ -51,7 +51,7 @@ export function AmountInput({ amtParam }: { amtParam: string }) {
 
         <button
           onClick={handleCompare}
-          disabled={!amount || Number(amount) <= 0 || isPending}
+          disabled={!amount || Number(amount) < 100 || isPending}
           className='px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors'
         >
           {isPending ? "Calculating…" : "Compare Rates"}
