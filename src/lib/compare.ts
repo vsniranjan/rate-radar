@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
 
-// import { getIDFCRate } from "./rates/idfc";
+import { getIDFCRate } from "./rates/idfc";
 import { getMarketRate } from "./rates/market";
 import { fetchIOBRates } from "./rates/iob";
 import { fetchMulyaRate } from "./rates/mulya";
@@ -8,16 +8,16 @@ import { fetchSkydoRate } from "./rates/skydo";
 import { fetchInfinityAppRates } from "./rates/infinityApp";
 
 import {
-  // calcIDFC,
+  calcIDFC,
   calcIOB,
   calcSkydo,
   calcMulya,
   calcInfinityApp,
 } from "./calculation";
 
-// const getCachedIDFCRate = unstable_cache(getIDFCRate, ["idfc-rate"], {
-//   revalidate: 10,
-// });
+const getCachedIDFCRate = unstable_cache(getIDFCRate, ["idfc-rate"], {
+  revalidate: 10,
+});
 const getCachedIOBRates = unstable_cache(fetchIOBRates, ["iob-rate"], {
   revalidate: 10,
 });
@@ -37,7 +37,7 @@ const getCachedMarketRate = unstable_cache(getMarketRate, ["market-rate"], {
 });
 
 const PROVIDERS = [
-  // { name: "IDFC", fetch: getCachedIDFCRate },
+  { name: "IDFC", fetch: getCachedIDFCRate },
   { name: "IOB", fetch: getCachedIOBRates },
   { name: "Skydo", fetch: getCachedSkydoRate },
   { name: "Mulya", fetch: getCachedMulyaRate },
@@ -47,7 +47,7 @@ const PROVIDERS = [
 
 const fetchAllRates = () =>
   Promise.allSettled([
-    // getCachedIDFCRate(),
+    getCachedIDFCRate(),
     getCachedIOBRates(),
     getCachedSkydoRate(),
     getCachedMulyaRate(),
@@ -63,10 +63,10 @@ export async function compareAllRates(amtUSD: number) {
     if (r.status === "rejected") console.error(PROVIDERS[i].name, r.reason);
   });
 
-  // const [idfc, iob, skydo, mulya, infinityApp, market] = results;
-  const [iob, skydo, mulya, infinityApp, market] = results;
+  const [idfc, iob, skydo, mulya, infinityApp, market] = results;
+  // const [iob, skydo, mulya, infinityApp, market] = results;
 
-  // const idfcRate = idfc.status === "fulfilled" ? idfc.value : null;
+  const idfcRate = idfc.status === "fulfilled" ? idfc.value : null;
   const iobRate = iob.status === "fulfilled" ? iob.value : null;
   const mulyaDetails = mulya.status === "fulfilled" ? mulya.value : null;
   const skydoDetails = skydo.status === "fulfilled" ? skydo.value : null;
@@ -75,13 +75,13 @@ export async function compareAllRates(amtUSD: number) {
   const marketDetails = market.status === "fulfilled" ? market.value : null;
 
   const rawData = [
-    // idfcRate && marketDetails
-    //   ? {
-    //       ...calcIDFC(amtUSD, marketDetails.rate, idfcRate),
-    //       name: "IDFC",
-    //       status: "ok" as const,
-    //     }
-    //   : { name: "IDFC", status: "error" as const },
+    idfcRate && marketDetails
+      ? {
+          ...calcIDFC(amtUSD, marketDetails.rate, idfcRate),
+          name: "IDFC",
+          status: "ok" as const,
+        }
+      : { name: "IDFC", status: "error" as const },
     iobRate && marketDetails
       ? {
           ...calcIOB(amtUSD, marketDetails.rate, iobRate),
