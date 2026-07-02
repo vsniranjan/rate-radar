@@ -25,6 +25,8 @@ export function AmountInput({ amtParam }: { amtParam: string }) {
     setAmount(amtParam);
   }, [amtParam]);
 
+  const isAmountInvalid = amount && Number(amount) > 0 && Number(amount) < 100;
+
   return (
     <Field className='mt-16'>
       <FieldLabel htmlFor='amount-usd' className='text-sm text-gray-500'>
@@ -32,7 +34,7 @@ export function AmountInput({ amtParam }: { amtParam: string }) {
       </FieldLabel>
 
       <div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4'>
-        <InputGroup className='max-w-96 h-14 border-blue-800 bg-white has-[[data-slot=input-group-control]:focus-visible]:border-blue-600 has-[[data-slot=input-group-control]:focus-visible]:ring-blue-600/30'>
+        <InputGroup className={`max-w-96 h-14 bg-white has-[[data-slot=input-group-control]:focus-visible]:border-blue-600 has-[[data-slot=input-group-control]:focus-visible]:ring-blue-600/30 ${isAmountInvalid ? 'border-red-500' : 'border-blue-800'}`}>
           <InputGroupInput
             id='amount-usd'
             type='number'
@@ -57,6 +59,12 @@ export function AmountInput({ amtParam }: { amtParam: string }) {
           {isPending ? "Calculating…" : "Compare Rates"}
         </button>
       </div>
+
+      {isAmountInvalid && (
+        <p className='text-sm text-red-600 mt-2'>
+          Minimum amount is $100 USD
+        </p>
+      )}
     </Field>
   );
 }
