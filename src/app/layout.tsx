@@ -13,7 +13,7 @@ const inter = Inter({
 const SITE_URL = "https://rateradar.in";
 const SITE_NAME = "Rate Radar";
 const SITE_DESCRIPTION =
-  "Compare USD to INR conversion rates across Skydo, Mulya, Infinity App, IDFC First Bank, and IOB. See exactly what you'll receive after all fees, markups, and taxes — pick the option that puts the most rupees in your account.";
+  "Compare USD to INR conversion rates across various Fintech platforms and banks. See exactly what you'll receive after all fees, markups, and taxes — pick the option that puts the most rupees in your account.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -149,7 +149,7 @@ function JsonLd() {
         name: "What is the best platform to convert USD to INR in India?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "The best platform depends on the transfer amount, as fee structures vary. Rate Radar compares Skydo, Mulya, Infinity App, IDFC First Bank, and IOB in real time to show you which gives the highest effective rate after all fees, markups, and taxes.",
+          text: "The best platform depends on the transfer amount, as fee structures vary. Rate Radar compares Svarious Fintech platforms and banks in real time to show you which gives the highest effective rate after all fees, markups, and taxes.",
         },
       },
       {

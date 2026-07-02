@@ -28,8 +28,8 @@ export default async function Home({
           international transfers.
         </h1>
         <p className='mt-4 text-muted'>
-          Compare forex charges across Skydo, Mulya, Infinity App, IDFC First
-          Bank, and IOB.
+          Compare forex charges across major banks and fintech platforms <br />
+          and pick the option that saves you the most.
         </p>
       </header>
 
@@ -60,19 +60,16 @@ export default async function Home({
             Rate Radar
           </p>
 
-          {/* Tagline */}
-          <p className='text-xs text-muted max-w-md mx-auto leading-relaxed'>
-            Free, open-source USD → INR comparison tool.
-            <span className='mx-1.5 text-gray-300'>·</span>
-            Compare forex charges across Skydo, Mulya, Infinity App, IDFC First
-            Bank, and IOB — find the best effective rate after all fees,
-            markups, and GST.
-          </p>
-
+          
           {/* Disclaimer */}
           <p className='text-[11px] text-gray-400 max-w-sm mx-auto leading-relaxed'>
             Rates are for informational purposes only. Always verify with the
             provider before making financial decisions.
+          </p>
+
+          {/* Copyright */}
+          <p className='text-[11px] text-gray-400'>
+            &copy; {new Date().getFullYear()} Rate Radar. All rights reserved.
           </p>
         </div>
       </footer>
