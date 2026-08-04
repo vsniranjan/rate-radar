@@ -42,9 +42,7 @@ export const calcMulya = (amtUSD: number, rate: number): CalculationResult => {
   const amtINR = amtUSD * rate;
   const totalFee = Number((amtINR * 0.01).toFixed(2));
   const rawReceivingAmt = amtINR - totalFee;
-  const receivingAmtINR = Number(
-    Math.max(0, rawReceivingAmt).toFixed(2),
-  );
+  const receivingAmtINR = Number(Math.max(0, rawReceivingAmt).toFixed(2));
   const effectiveRate = Number((receivingAmtINR / amtUSD).toFixed(4));
 
   const breakdown = {
@@ -76,9 +74,7 @@ export const calcInfinityApp = (
 
   const totalFee = Number((amtINR * 0.005).toFixed(2));
   const rawReceivingAmt = amtINR - totalFee;
-  const receivingAmtINR = Number(
-    Math.max(0, rawReceivingAmt).toFixed(2),
-  );
+  const receivingAmtINR = Number(Math.max(0, rawReceivingAmt).toFixed(2));
 
   const effectiveRate = Number((receivingAmtINR / amtUSD).toFixed(4));
 
@@ -115,9 +111,7 @@ export const calcSkydo = (amtUSD: number, rate: number): CalculationResult => {
 
   const totalFee = Number((transactionFee + gstOnTransactionFee).toFixed(2));
   const rawReceivingAmt = amtINR - totalFee;
-  const receivingAmtINR = Number(
-    Math.max(0, rawReceivingAmt).toFixed(2),
-  );
+  const receivingAmtINR = Number(Math.max(0, rawReceivingAmt).toFixed(2));
 
   const effectiveRate = Number((receivingAmtINR / amtUSD).toFixed(4));
 
@@ -157,9 +151,7 @@ export const calcIDFC = (
   const gstOnTaxableValue = calcBankCharges(amtINRUsingTTRate);
   const totalFee = Number(gstOnTaxableValue.toFixed(2));
   const rawReceivingAmt = amtINRUsingTTRate - totalFee;
-  const receivingAmtINR = Number(
-    Math.max(0, rawReceivingAmt).toFixed(2),
-  );
+  const receivingAmtINR = Number(Math.max(0, rawReceivingAmt).toFixed(2));
   const effectiveRate = Number((receivingAmtINR / amtUSD).toFixed(4));
 
   const breakdown = {
@@ -193,7 +185,7 @@ export const calcIOB = (
   const amtINR = amtUSD * rate;
   const amtINRUsingTTRate = amtUSD * ttBuyRate;
   const gstOnTaxableValue = calcBankCharges(amtINRUsingTTRate);
-  const IRCFee = 250;
+  const IRCFee = 500;
   const gstOnIRC = IRCFee * gstRate;
   const IRCTotalFee = IRCFee + gstOnIRC;
   const toptalWireFee = toptalWireRate * rate;
@@ -201,9 +193,7 @@ export const calcIOB = (
     (gstOnTaxableValue + IRCTotalFee + toptalWireFee).toFixed(2),
   );
   const rawReceivingAmt = amtINRUsingTTRate - totalFee;
-  const receivingAmtINR = Number(
-    Math.max(0, rawReceivingAmt).toFixed(2),
-  );
+  const receivingAmtINR = Number(Math.max(0, rawReceivingAmt).toFixed(2));
   const effectiveRate = Number((receivingAmtINR / amtUSD).toFixed(4));
 
   const breakdown = {
