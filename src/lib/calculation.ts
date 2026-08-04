@@ -156,7 +156,7 @@ export const calcIDFC = (
   const amtINRUsingTTRate = amtUSD * ttBuyRate;
   const gstOnTaxableValue = calcBankCharges(amtINRUsingTTRate);
   const totalFee = Number(gstOnTaxableValue.toFixed(2));
-  const rawReceivingAmt = amtINR - totalFee;
+  const rawReceivingAmt = amtINRUsingTTRate - totalFee;
   const receivingAmtINR = Number(
     Math.max(0, rawReceivingAmt).toFixed(2),
   );
@@ -200,7 +200,7 @@ export const calcIOB = (
   const totalFee = Number(
     (gstOnTaxableValue + IRCTotalFee + toptalWireFee).toFixed(2),
   );
-  const rawReceivingAmt = amtINR - totalFee;
+  const rawReceivingAmt = amtINRUsingTTRate - totalFee;
   const receivingAmtINR = Number(
     Math.max(0, rawReceivingAmt).toFixed(2),
   );
