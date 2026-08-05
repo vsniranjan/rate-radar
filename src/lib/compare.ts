@@ -115,7 +115,7 @@ export async function compareAllRates(amtUSD: number) {
       ? {
           ...calcICICI(amtUSD, marketDetails.rate),
           name: "ICICI",
-          note: "Toptal member only offer. Mid-market rate, no forex markup",
+          note: "Toptal member only. No forex markup",
           status: "ok" as const,
         }
       : { name: "ICICI", status: "error" as const },
