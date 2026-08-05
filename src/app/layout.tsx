@@ -169,7 +169,7 @@ function JsonLd() {
         name: "Which platforms does Rate Radar compare?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Rate Radar compares six options: Skydo, Mulya, and Infinity App (fintechs), plus IDFC First Bank, Indian Overseas Bank (IOB), and ICICI Bank as banking options. The ICICI option reflects the special mid-market rate offered to Toptal members, which carries no forex markup.",
+          text: "Rate Radar compares six options: Skydo, Mulya, and Infinity App (fintechs), plus IDFC First Bank, Indian Overseas Bank (IOB), and ICICI Bank as banking options. The ICICI option reflects the special mid-market rate offered to Toptal members, minus an 8 paise markup.",
         },
       },
       {

@@ -4,6 +4,10 @@ type CalculationResult = {
   effectiveRate: number;
   feesExceedAmount?: boolean;
   breakdown: {
+    preFee?: {
+      description: string;
+      amountUSD: number;
+    };
     conversion?: {
       description: string;
       amount: number;
@@ -22,6 +26,7 @@ type CalculationResult = {
 
 const gstRate = 0.18;
 const toptalWireRate = 10; // 10 USD
+const iciciMarkupPerUSD = 0.08; // 8 paise markup on mid-market rate
 
 export const calcBankCharges = (amtINRUsingTTRate: number): number => {
   const taxableValue = (() => {
@@ -143,11 +148,10 @@ export const calcSkydo = (amtUSD: number, rate: number): CalculationResult => {
 
 export const calcIDFC = (
   amtUSD: number,
-  rate: number,
   ttBuyRate: number,
 ): CalculationResult => {
-  const amtINR = amtUSD * rate;
-  const amtINRUsingTTRate = amtUSD * ttBuyRate;
+  const netAmtUSD = Math.max(0, amtUSD - toptalWireRate);
+  const amtINRUsingTTRate = netAmtUSD * ttBuyRate;
   const gstOnTaxableValue = calcBankCharges(amtINRUsingTTRate);
   const totalFee = Number(gstOnTaxableValue.toFixed(2));
   const rawReceivingAmt = amtINRUsingTTRate - totalFee;
@@ -155,6 +159,10 @@ export const calcIDFC = (
   const effectiveRate = Number((receivingAmtINR / amtUSD).toFixed(4));
 
   const breakdown = {
+    preFee: {
+      description: "Toptal Wire Fee",
+      amountUSD: toptalWireRate,
+    },
     conversion: {
       description: "Amount using TT Buy Rate",
       amount: amtINRUsingTTRate,
@@ -179,24 +187,24 @@ export const calcIDFC = (
 
 export const calcIOB = (
   amtUSD: number,
-  rate: number,
   ttBuyRate: number,
 ): CalculationResult => {
-  const amtINR = amtUSD * rate;
-  const amtINRUsingTTRate = amtUSD * ttBuyRate;
+  const netAmtUSD = Math.max(0, amtUSD - toptalWireRate);
+  const amtINRUsingTTRate = netAmtUSD * ttBuyRate;
   const gstOnTaxableValue = calcBankCharges(amtINRUsingTTRate);
   const IRCFee = 500;
   const gstOnIRC = IRCFee * gstRate;
   const IRCTotalFee = IRCFee + gstOnIRC;
-  const toptalWireFee = toptalWireRate * rate;
-  const totalFee = Number(
-    (gstOnTaxableValue + IRCTotalFee + toptalWireFee).toFixed(2),
-  );
+  const totalFee = Number((gstOnTaxableValue + IRCTotalFee).toFixed(2));
   const rawReceivingAmt = amtINRUsingTTRate - totalFee;
   const receivingAmtINR = Number(Math.max(0, rawReceivingAmt).toFixed(2));
   const effectiveRate = Number((receivingAmtINR / amtUSD).toFixed(4));
 
   const breakdown = {
+    preFee: {
+      description: "Toptal Wire Fee",
+      amountUSD: toptalWireRate,
+    },
     conversion: {
       description: "Amount using TT Buy Rate",
       amount: amtINRUsingTTRate,
@@ -212,7 +220,6 @@ export const calcIOB = (
         description: "IRC fee + 18% GST",
         amount: IRCTotalFee,
       },
-      { description: "Toptal Wire Fee", amount: toptalWireFee },
     ],
   };
 
@@ -226,23 +233,27 @@ export const calcIOB = (
 };
 
 export const calcICICI = (amtUSD: number, rate: number): CalculationResult => {
-  const amtINR = amtUSD * rate;
+  const netAmtUSD = Math.max(0, amtUSD - toptalWireRate);
+  const iciciRate = rate - iciciMarkupPerUSD;
+  const amtINR = netAmtUSD * iciciRate;
   const gstOnTaxableValue = calcBankCharges(amtINR);
   const IRCFee = 500;
   const gstOnIRC = IRCFee * gstRate;
   const IRCTotalFee = IRCFee + gstOnIRC;
-  const toptalWireFee = toptalWireRate * rate;
-  const totalFee = Number(
-    (gstOnTaxableValue + IRCTotalFee + toptalWireFee).toFixed(2),
-  );
+  const totalFee = Number((gstOnTaxableValue + IRCTotalFee).toFixed(2));
   const rawReceivingAmt = amtINR - totalFee;
   const receivingAmtINR = Number(Math.max(0, rawReceivingAmt).toFixed(2));
   const effectiveRate = Number((receivingAmtINR / amtUSD).toFixed(4));
 
   const breakdown = {
+    preFee: {
+      description: "Toptal Wire Fee",
+      amountUSD: toptalWireRate,
+    },
     conversion: {
-      description: "Mid-market conversion (Toptal member offer)",
+      description: "ICICI rate (mid-market − 8p)",
       amount: amtINR,
+      ttBuyRate: iciciRate,
     },
     additionalFees: [
       {
@@ -253,7 +264,6 @@ export const calcICICI = (amtUSD: number, rate: number): CalculationResult => {
         description: "IRC fee + 18% GST",
         amount: IRCTotalFee,
       },
-      { description: "Toptal Wire Fee", amount: toptalWireFee },
     ],
   };
 

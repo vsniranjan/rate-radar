@@ -136,12 +136,14 @@ The forex cost is not billed as a separate line item — it is already baked int
 
 ### Indian Overseas Bank (IOB)
 
-IOB works similarly to IDFC but charges an additional **IRC (Inward Remittance Certificate) fee** of ₹500 + 18% GST, plus the **Toptal wire fee** of $10.
+IOB works similarly to IDFC but charges an additional **IRC (Inward Remittance Certificate) fee** of ₹500 + 18% GST. The **Toptal wire fee** of $10 is deducted in USD *before* conversion — it never gets converted, so the bank converts only the net amount that actually lands.
 
 #### Formula
 
 ```
-Amount INR (TT)       = USD Amount × IOB TT Buy Rate
+Net USD Amount        = USD Amount − $10        (Toptal wire fee)
+
+Amount INR (TT)       = Net USD Amount × IOB TT Buy Rate
 
 Bank Charges GST      = calcBankCharges(Amount INR at TT Rate)
 
@@ -149,18 +151,16 @@ IRC Fee               = ₹500
 GST on IRC            = 500 × 0.18 = ₹90
 IRC Total             = ₹590
 
-Toptal Wire Fee       = $10 × Mid-Market Rate
-
-Total Fee             = Bank Charges GST + IRC Total + Toptal Wire Fee
+Total Fee             = Bank Charges GST + IRC Total
 Receiving Amount      = Amount INR (TT) − Total Fee
-Effective Rate        = Receiving Amount ÷ USD Amount
+Effective Rate        = Receiving Amount ÷ USD Amount   (gross, before wire fee)
 ```
 
 ---
 
 ### ICICI Bank (Toptal member offer)
 
-ICICI is a special case. There is **no rate to fetch** — Toptal members receive the **mid-market rate with zero forex markup** on inward remittances, so the mid-market rate from Frankfurter is used directly as the conversion rate. Everything else matches IOB: tiered service charge GST, IRC fee, and the Toptal wire fee.
+ICICI is a special case. There is **no rate to fetch** — Toptal members receive the **mid-market rate minus an 8 paise markup** on inward remittances, so the mid-market rate from Frankfurter (less 8p) is used as the conversion rate. Everything else matches IOB: tiered service charge GST, IRC fee, and the Toptal wire fee.
 
 > [!NOTE]
 > This is a negotiated rate available to Toptal members only. If you are not remitting through Toptal, ICICI applies its own TT Buy Rate and this row will not reflect what you receive.
@@ -168,7 +168,10 @@ ICICI is a special case. There is **no rate to fetch** — Toptal members receiv
 #### Formula
 
 ```
-Amount INR            = USD Amount × Mid-Market Rate   (no markup)
+Net USD Amount        = USD Amount − $10        (Toptal wire fee)
+
+ICICI Rate            = Mid-Market Rate − ₹0.08   (8p markup)
+Amount INR            = Net USD Amount × ICICI Rate
 
 Bank Charges GST      = calcBankCharges(Amount INR)
 
@@ -176,11 +179,9 @@ IRC Fee               = ₹500
 GST on IRC            = 500 × 0.18 = ₹90
 IRC Total             = ₹590
 
-Toptal Wire Fee       = $10 × Mid-Market Rate
-
-Total Fee             = Bank Charges GST + IRC Total + Toptal Wire Fee
+Total Fee             = Bank Charges GST + IRC Total
 Receiving Amount      = Amount INR − Total Fee
-Effective Rate        = Receiving Amount ÷ USD Amount
+Effective Rate        = Receiving Amount ÷ USD Amount   (gross, before wire fee)
 ```
 
 ---
@@ -210,8 +211,8 @@ The platform at the top is tagged as **best** (highlighted in green), and the on
 | **Mulya** | Flat 1% | Included | — |
 | **Infinity App** | Flat 0.5% | Included | — |
 | **IDFC First Bank** | TT Rate spread + tiered svc charge | 18% on svc charge | — |
-| **IOB** | TT Rate spread + tiered svc charge | 18% on svc charge | IRC ₹500 + GST, Toptal wire $10 |
-| **ICICI Bank** (Toptal) | Mid-market, no markup + tiered svc charge | 18% on svc charge | IRC ₹500 + GST, Toptal wire $10 |
+| **IOB** | TT Rate spread + tiered svc charge | 18% on svc charge | IRC ₹500 + GST, Toptal wire $10 (deducted pre-conversion) |
+| **ICICI Bank** (Toptal) | Mid-market − 8p markup + tiered svc charge | 18% on svc charge | IRC ₹500 + GST, Toptal wire $10 (deducted pre-conversion) |
 
 ---
 

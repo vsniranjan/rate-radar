@@ -76,16 +76,16 @@ export async function compareAllRates(amtUSD: number) {
   const marketDetails = market.status === "fulfilled" ? market.value : null;
 
   const rawData = [
-    idfcRate && marketDetails
+    idfcRate
       ? {
-          ...calcIDFC(amtUSD, marketDetails.rate, idfcRate),
+          ...calcIDFC(amtUSD, idfcRate),
           name: "IDFC",
           status: "ok" as const,
         }
       : { name: "IDFC", status: "error" as const },
-    iobRate && marketDetails
+    iobRate
       ? {
-          ...calcIOB(amtUSD, marketDetails.rate, iobRate),
+          ...calcIOB(amtUSD, iobRate),
           name: "IOB",
           status: "ok" as const,
         }
@@ -115,7 +115,7 @@ export async function compareAllRates(amtUSD: number) {
       ? {
           ...calcICICI(amtUSD, marketDetails.rate),
           name: "ICICI",
-          note: "Toptal member only. No forex markup",
+          note: "Toptal member only. Mid-market minus 8p markup",
           status: "ok" as const,
         }
       : { name: "ICICI", status: "error" as const },

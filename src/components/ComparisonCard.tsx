@@ -19,6 +19,10 @@ interface CardPropsOk {
   feesExceedAmount?: boolean;
   type: Variant;
   breakdown: {
+    preFee?: {
+      description: string;
+      amountUSD: number;
+    };
     conversion?: {
       description: string;
       amount: number;
@@ -138,6 +142,17 @@ export function ComparisonCard({ data }: ComparisonCardProps) {
         <div className='text-[11px] font-medium text-[#8c97b8] tracking-widest uppercase mb-3 pt-4'>
           Fee breakdown
         </div>
+
+        {data.breakdown.preFee && (
+          <div className='flex justify-between items-center py-2 border-b border-black/10'>
+            <p className='text-[13px] text-[#141f59] m-0!'>
+              {data.breakdown.preFee.description}
+            </p>
+            <span className='text-[14px] font-medium text-brand-red'>
+              -${data.breakdown.preFee.amountUSD.toLocaleString("en-US")}
+            </span>
+          </div>
+        )}
 
         {data.breakdown.conversion && (
           <div className='flex justify-between items-center py-2 border-b border-black/10'>
