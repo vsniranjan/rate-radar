@@ -35,6 +35,9 @@ export const metadata: Metadata = {
     "Infinity App rates",
     "IDFC First Bank forex",
     "IOB exchange rate",
+    "ICICI Bank forex",
+    "Toptal ICICI rate",
+    "Toptal India payout",
     "international transfer fees",
     "wire transfer India",
     "freelancer forex",
@@ -134,6 +137,7 @@ function JsonLd() {
       "Infinity App forex rate comparison",
       "IDFC First Bank forex rate comparison",
       "Indian Overseas Bank (IOB) forex rate comparison",
+      "ICICI Bank forex rate comparison (Toptal member offer)",
       "Total fee breakdown including GST",
       "Effective exchange rate calculation",
       "Best and worst option highlighting",
@@ -165,7 +169,7 @@ function JsonLd() {
         name: "Which platforms does Rate Radar compare?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Rate Radar compares five platforms: Skydo, Mulya, and Infinity App (fintechs), plus IDFC First Bank and Indian Overseas Bank (IOB) as traditional banking options.",
+          text: "Rate Radar compares six options: Skydo, Mulya, and Infinity App (fintechs), plus IDFC First Bank, Indian Overseas Bank (IOB), and ICICI Bank as banking options. The ICICI option reflects the special mid-market rate offered to Toptal members, which carries no forex markup.",
         },
       },
       {

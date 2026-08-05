@@ -12,6 +12,7 @@ type Variant = "best" | "default" | "worst";
 interface CardPropsOk {
   status: "ok";
   name: string;
+  note?: string;
   receivingAmtINR: number;
   totalFee: number;
   effectiveRate: number;
@@ -90,8 +91,15 @@ export function ComparisonCard({ data }: ComparisonCardProps) {
       className={`border-[1.3px] rounded-xl overflow-hidden ${borderColor[data.type]} ${triggerBg[data.type]}`}
     >
       <AccordionTrigger className={`px-5 gap-4 flex`}>
-        <span className='flex-1 text-primary text-xl font-semibold'>
-          {data.name}
+        <span className='flex-1'>
+          <span className='block text-primary text-xl font-semibold'>
+            {data.name}
+          </span>
+          {data.note && (
+            <span className='block text-muted text-[11px] font-normal mt-0.5'>
+              {data.note}
+            </span>
+          )}
         </span>
 
         {data.feesExceedAmount ? (

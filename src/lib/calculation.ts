@@ -224,3 +224,44 @@ export const calcIOB = (
     breakdown,
   };
 };
+
+export const calcICICI = (amtUSD: number, rate: number): CalculationResult => {
+  const amtINR = amtUSD * rate;
+  const gstOnTaxableValue = calcBankCharges(amtINR);
+  const IRCFee = 500;
+  const gstOnIRC = IRCFee * gstRate;
+  const IRCTotalFee = IRCFee + gstOnIRC;
+  const toptalWireFee = toptalWireRate * rate;
+  const totalFee = Number(
+    (gstOnTaxableValue + IRCTotalFee + toptalWireFee).toFixed(2),
+  );
+  const rawReceivingAmt = amtINR - totalFee;
+  const receivingAmtINR = Number(Math.max(0, rawReceivingAmt).toFixed(2));
+  const effectiveRate = Number((receivingAmtINR / amtUSD).toFixed(4));
+
+  const breakdown = {
+    conversion: {
+      description: "Mid-market conversion (Toptal member offer)",
+      amount: amtINR,
+    },
+    additionalFees: [
+      {
+        description: "Currency Conversion Tax",
+        amount: gstOnTaxableValue,
+      },
+      {
+        description: "IRC fee + 18% GST",
+        amount: IRCTotalFee,
+      },
+      { description: "Toptal Wire Fee", amount: toptalWireFee },
+    ],
+  };
+
+  return {
+    receivingAmtINR,
+    totalFee,
+    effectiveRate,
+    feesExceedAmount: rawReceivingAmt < 0,
+    breakdown,
+  };
+};

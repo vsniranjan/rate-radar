@@ -13,6 +13,7 @@ import {
   calcSkydo,
   calcMulya,
   calcInfinityApp,
+  calcICICI,
 } from "./calculation";
 
 const getCachedIDFCRate = unstable_cache(getIDFCRate, ["idfc-rate"], {
@@ -110,6 +111,14 @@ export async function compareAllRates(amtUSD: number) {
           status: "ok" as const,
         }
       : { name: "InfinityApp", status: "error" as const },
+    marketDetails
+      ? {
+          ...calcICICI(amtUSD, marketDetails.rate),
+          name: "ICICI",
+          note: "Toptal member only offer. Mid-market rate, no forex markup",
+          status: "ok" as const,
+        }
+      : { name: "ICICI", status: "error" as const },
   ];
 
   const validData = rawData.filter((d) => d.status === "ok");
