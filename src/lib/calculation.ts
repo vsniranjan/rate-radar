@@ -27,6 +27,7 @@ type CalculationResult = {
 const gstRate = 0.18;
 const toptalWireRate = 35; // 10 USD
 const iciciMarkupPerUSD = 0.08; // 8 paise markup on mid-market rate
+const mulyaRate = 0.003 // 0.3 %
 
 export const calcBankCharges = (amtINRUsingTTRate: number): number => {
   const taxableValue = (() => {
@@ -45,7 +46,7 @@ export const calcBankCharges = (amtINRUsingTTRate: number): number => {
 
 export const calcMulya = (amtUSD: number, rate: number): CalculationResult => {
   const amtINR = amtUSD * rate;
-  const totalFee = Number((amtINR * 0.01).toFixed(2));
+  const totalFee = Number((amtINR * mulyaRate).toFixed(2));
   const rawReceivingAmt = amtINR - totalFee;
   const receivingAmtINR = Number(Math.max(0, rawReceivingAmt).toFixed(2));
   const effectiveRate = Number((receivingAmtINR / amtUSD).toFixed(4));
@@ -56,7 +57,7 @@ export const calcMulya = (amtUSD: number, rate: number): CalculationResult => {
       amount: amtINR,
     },
     platformFee: {
-      description: "1% of gross amount",
+      description: `${mulyaRate * 100}% of gross amount (Toptal member offer)`,
       amount: totalFee,
     },
     additionalFees: [],
