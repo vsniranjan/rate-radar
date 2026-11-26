@@ -25,9 +25,9 @@ type CalculationResult = {
 };
 
 const gstRate = 0.18;
-const toptalWireRate = 35; // 10 USD
+const toptalWireRate = 20; // in USD
 const iciciMarkupPerUSD = 0.08; // 8 paise markup on mid-market rate
-const mulyaRate = 0.003 // 0.3 %
+const mulyaRate = 0.003; // 0.3 %
 
 export const calcBankCharges = (amtINRUsingTTRate: number): number => {
   const taxableValue = (() => {
