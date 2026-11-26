@@ -3,6 +3,7 @@ import { AmountInput } from "@/components/AmountInput";
 import ComparisonField from "@/components/ComparisonField";
 import WorkingField from "@/components/WorkingField";
 import Feedback from "@/components/Feedback";
+import Link from "next/link";
 
 export default async function Home({
   searchParams,
@@ -60,7 +61,6 @@ export default async function Home({
             Rate Radar
           </p>
 
-          
           {/* Disclaimer */}
           <p className='text-[11px] text-gray-400 max-w-sm mx-auto leading-relaxed'>
             Rates are for informational purposes only. Always verify with the
@@ -70,6 +70,17 @@ export default async function Home({
           {/* Copyright */}
           <p className='text-[11px] text-gray-400'>
             &copy; {new Date().getFullYear()} Rate Radar. All rights reserved.
+          </p>
+
+          <p className='text-[11px] text-gray-400'>
+            <a
+              href='https://niranjanvs.me'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='underline'
+            >
+              Made by Niranjan
+            </a>
           </p>
         </div>
       </footer>
