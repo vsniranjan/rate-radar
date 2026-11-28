@@ -56,7 +56,7 @@ const fetchAllRates = () =>
     getCachedMarketRate(),
   ]);
 
-export async function compareAllRates(amtUSD: number) {
+export async function compareAllRates(amtUSD: number, wireFeeUSD = 20) {
   type Variant = "best" | "default" | "worst";
   const results = await fetchAllRates();
 
@@ -78,14 +78,14 @@ export async function compareAllRates(amtUSD: number) {
   const rawData = [
     idfcRate
       ? {
-          ...calcIDFC(amtUSD, idfcRate),
+          ...calcIDFC(amtUSD, idfcRate, wireFeeUSD),
           name: "IDFC",
           status: "ok" as const,
         }
       : { name: "IDFC", status: "error" as const },
     iobRate
       ? {
-          ...calcIOB(amtUSD, iobRate),
+          ...calcIOB(amtUSD, iobRate, wireFeeUSD),
           name: "IOB",
           status: "ok" as const,
         }
@@ -113,7 +113,7 @@ export async function compareAllRates(amtUSD: number) {
       : { name: "InfinityApp", status: "error" as const },
     marketDetails
       ? {
-          ...calcICICI(amtUSD, marketDetails.rate),
+          ...calcICICI(amtUSD, marketDetails.rate, wireFeeUSD),
           name: "ICICI",
           note: "Toptal member only. Mid-market minus 8p markup",
           status: "ok" as const,

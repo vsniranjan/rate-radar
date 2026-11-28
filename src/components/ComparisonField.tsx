@@ -4,10 +4,11 @@ import { compareAllRates } from "@/lib/compare";
 
 type Props = {
   amtUSD: number;
+  wireFeeUSD: number;
 };
 
-const ComparisonField = async ({ amtUSD }: Props) => {
-  const content = await compareAllRates(amtUSD);
+const ComparisonField = async ({ amtUSD, wireFeeUSD }: Props) => {
+  const content = await compareAllRates(amtUSD, wireFeeUSD);
 
   return (
     <>

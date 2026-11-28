@@ -8,18 +8,27 @@ import Link from "next/link";
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ amt?: string }>;
+  searchParams: Promise<{ amt?: string; wireFee?: string }>;
 }) {
-  const { amt } = await searchParams;
+  const { amt, wireFee } = await searchParams;
 
   const parsedAmt = Number(amt);
+  const parsedWireFee = Number(wireFee);
 
   const amtParam =
     typeof amt === "string" && Number.isFinite(parsedAmt) && parsedAmt > 0
       ? amt
       : "1000";
+  const wireFeeParam =
+    typeof wireFee === "string" &&
+    wireFee !== "" &&
+    Number.isFinite(parsedWireFee) &&
+    parsedWireFee >= 0
+      ? wireFee
+      : "20";
 
   const amtUSD = Number(amtParam);
+  const wireFeeUSD = Number(wireFeeParam);
   return (
     <>
       <header>
@@ -34,18 +43,22 @@ export default async function Home({
         </p>
       </header>
 
-      <AmountInput amtParam={amtParam} />
+      <AmountInput
+        key={`${amtParam}-${wireFeeParam}`}
+        amtParam={amtParam}
+        wireFeeParam={wireFeeParam}
+      />
 
       <section aria-label='Forex rate comparison results'>
         <Suspense
-          key={amtUSD}
+          key={`${amtUSD}-${wireFeeUSD}`}
           fallback={
             <p className='text-muted text-sm mt-14 mb-8 pl-2 animate-pulse'>
               Fetching latest rates…
             </p>
           }
         >
-          <ComparisonField amtUSD={amtUSD} />
+          <ComparisonField amtUSD={amtUSD} wireFeeUSD={wireFeeUSD} />
         </Suspense>
       </section>
 
