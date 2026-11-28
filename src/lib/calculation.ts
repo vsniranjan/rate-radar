@@ -29,6 +29,31 @@ const defaultToptalWireRate = 20; // in USD
 const iciciMarkupPerUSD = 0.08; // 8 paise markup on mid-market rate
 const mulyaRate = 0.003; // 0.3 %
 
+export const calcXflow = (
+  amtUSD: number,
+  rate: number,
+  receivingAmtINR: number,
+): CalculationResult => {
+  const amtINR = amtUSD * rate;
+  const totalFee = Number((amtINR - receivingAmtINR).toFixed(2));
+
+  return {
+    receivingAmtINR,
+    totalFee,
+    effectiveRate: Number((receivingAmtINR / amtUSD).toFixed(4)),
+    breakdown: {
+      conversion: {
+        description: "Mid-market conversion",
+        amount: amtINR,
+      },
+      platformFee: {
+        description: "Xflow fee / FX markup",
+        amount: totalFee,
+      },
+    },
+  };
+};
+
 export const calcBankCharges = (amtINRUsingTTRate: number): number => {
   const taxableValue = (() => {
     if (amtINRUsingTTRate < 100000) {

@@ -6,6 +6,7 @@ import { fetchIOBRates } from "./rates/iob";
 import { fetchMulyaRate } from "./rates/mulya";
 import { fetchSkydoRate } from "./rates/skydo";
 import { fetchInfinityAppRates } from "./rates/infinityApp";
+import { fetchXflowRate } from "./rates/xflow";
 
 import {
   calcIDFC,
@@ -14,6 +15,7 @@ import {
   calcMulya,
   calcInfinityApp,
   calcICICI,
+  calcXflow,
 } from "./calculation";
 
 const getCachedIDFCRate = unstable_cache(getIDFCRate, ["idfc-rate"], {
@@ -36,6 +38,9 @@ const getCachedInfinityAppRates = unstable_cache(
 const getCachedMarketRate = unstable_cache(getMarketRate, ["market-rate"], {
   revalidate: 10,
 });
+const getCachedXflowRate = unstable_cache(fetchXflowRate, ["xflow-rate"], {
+  revalidate: 10,
+});
 
 const PROVIDERS = [
   { name: "IDFC", fetch: getCachedIDFCRate },
@@ -44,9 +49,10 @@ const PROVIDERS = [
   { name: "Mulya", fetch: getCachedMulyaRate },
   { name: "Infinity App", fetch: getCachedInfinityAppRates },
   { name: "Market", fetch: getCachedMarketRate },
+  { name: "Xflow", fetch: getCachedXflowRate },
 ];
 
-const fetchAllRates = () =>
+const fetchAllRates = (amtUSD: number) =>
   Promise.allSettled([
     getCachedIDFCRate(),
     getCachedIOBRates(),
@@ -54,17 +60,18 @@ const fetchAllRates = () =>
     getCachedMulyaRate(),
     getCachedInfinityAppRates(),
     getCachedMarketRate(),
+    getCachedXflowRate(amtUSD),
   ]);
 
 export async function compareAllRates(amtUSD: number, wireFeeUSD = 20) {
   type Variant = "best" | "default" | "worst";
-  const results = await fetchAllRates();
+  const results = await fetchAllRates(amtUSD);
 
   results.forEach((r, i) => {
     if (r.status === "rejected") console.error(PROVIDERS[i].name, r.reason);
   });
 
-  const [idfc, iob, skydo, mulya, infinityApp, market] = results;
+  const [idfc, iob, skydo, mulya, infinityApp, market, xflow] = results;
   // const [iob, skydo, mulya, infinityApp, market] = results;
 
   const idfcRate = idfc.status === "fulfilled" ? idfc.value : null;
@@ -74,8 +81,21 @@ export async function compareAllRates(amtUSD: number, wireFeeUSD = 20) {
   const infinityAppDetails =
     infinityApp.status === "fulfilled" ? infinityApp.value : null;
   const marketDetails = market.status === "fulfilled" ? market.value : null;
+  const xflowDetails = xflow.status === "fulfilled" ? xflow.value : null;
 
   const rawData = [
+    xflowDetails
+      ? {
+          ...calcXflow(
+            amtUSD,
+            xflowDetails.fx_rate,
+            xflowDetails.receivingAmtINR,
+          ),
+          name: "Xflow",
+          note: `${xflowDetails.plan} plan`,
+          status: "ok" as const,
+        }
+      : { name: "Xflow", status: "error" as const },
     idfcRate
       ? {
           ...calcIDFC(amtUSD, idfcRate, wireFeeUSD),
